@@ -1,3 +1,44 @@
+/* SOLUTION */
+
+const findEmployeeByName = (name, array) => {
+  return array.filter((employee) => employee.name === name)[0];
+};
+
+const findManagerFor = (empl, array) => {
+  return array.filter((employee) => employee.id === empl.managerId)[0];
+};
+
+const findCoworkersFor = (empl, array) => {
+  return array.filter(
+    (employee) =>
+      employee.managerId === empl.managerId && employee.id !== empl.id
+  );
+};
+
+const findManagementChainForEmployee = (empl, array) => {
+  const mgmtChain = [];
+  //base case, employee with no mgr returns empty array
+  if (!empl.managerId) {
+    return [];
+  } else {
+    let manager = findManagerFor(empl, array);
+    return findManagementChainForEmployee(manager, array).concat(manager);
+  }
+};
+
+//WIP
+// const generateManagementTree = (emplList) => {
+//   const mgmtTree = {};
+//   const topMgr = emplList.filter((empl) => !empl.managerId);
+//   mgmtTree.id = topMgr.id;
+//   mgmtTree.name = topMgr.name;
+//   mgmtTree.reports = [
+//     emplList.filter((employee) => (employee.managerId = topMrg.id)),
+//   ];
+// };
+
+/* TESTS */
+
 const employees = [
   { id: 1, name: "moe" },
   { id: 2, name: "larry", managerId: 1 },
