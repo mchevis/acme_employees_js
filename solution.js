@@ -26,16 +26,36 @@ const findManagementChainForEmployee = (empl, array) => {
   }
 };
 
-//WIP
-// const generateManagementTree = (emplList) => {
-//   const mgmtTree = {};
-//   const topMgr = emplList.filter((empl) => !empl.managerId);
-//   mgmtTree.id = topMgr.id;
-//   mgmtTree.name = topMgr.name;
-//   mgmtTree.reports = [
-//     emplList.filter((employee) => (employee.managerId = topMrg.id)),
-//   ];
-// };
+//this feels like a costly solution to this because of all the forEach but couldn't figure out a better one...
+const generateManagementTree = (emplList) => {
+  // add reports property to every employee
+  emplList.forEach((employee) => (employee.reports = []));
+  //fill in each employee's reports
+  emplList.forEach((employee) => {
+    let mgr = findManagerFor(employee, emplList);
+    if (mgr) {
+      mgr.reports.push(employee);
+    }
+  });
+  // return the highest level employee (ie the one without a manager)
+  return emplList.filter((employee) => !employee.managerId)[0];
+};
+
+const displayManagementTree = (emplTree) => {
+  return [emplTree].reduce((aggr, empl) => {
+    let dashes = new Array(
+      findManagementChainForEmployee(empl, emplTree).length
+    )
+      .fill("-")
+      .join("");
+    aggr += `${dashes}${empl.name}`;
+    if (!empl.reports) {
+      return "";
+    } else {
+      displayManagementTree(empl.reports[0]);
+    }
+  }, "");
+};
 
 /* TESTS */
 
