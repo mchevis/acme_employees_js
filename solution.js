@@ -54,7 +54,6 @@ function displayManagementTree(emplTree) {
       treeDisplay = treeDisplay + "\n" + "-" + descendentsDisplay;
     }
   }
-  console.log(treeDisplay);
   return treeDisplay;
 }
 
@@ -187,7 +186,7 @@ spacer("");
 
 spacer("displayManagementTree");
 //given a tree of employees, generate a display which displays the hierarchy
-displayManagementTree(generateManagementTree(employees)); /*
+console.log(displayManagementTree(generateManagementTree(employees))); /*
   moe
   -larry
   --shep
