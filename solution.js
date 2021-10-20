@@ -26,12 +26,16 @@ const findManagementChainForEmployee = (empl, array) => {
   }
 };
 
-//this feels like a costly solution to this because of all the forEach but couldn't figure out a better one...
+const findDirectReportsFor = (empl, array) => {
+  return array.filter((employee) => empl.id === employee.managerId);
+};
+
+//I feel like I should be using recursion here but this worked :shrug:
+//Should this be returning an array? The "tests" indicate not, but I feel like it makes no sense to have the top employee be the first object itself.
+//What if there are several top level mgrs?
 const generateManagementTree = (emplList) => {
-  // add reports property to every employee
-  emplList.forEach((employee) => (employee.reports = []));
-  //fill in each employee's reports
   emplList.forEach((employee) => {
+    employee.reports = [];
     let mgr = findManagerFor(employee, emplList);
     if (mgr) {
       mgr.reports.push(employee);
@@ -41,21 +45,18 @@ const generateManagementTree = (emplList) => {
   return emplList.filter((employee) => !employee.managerId)[0];
 };
 
-const displayManagementTree = (emplTree) => {
-  return [emplTree].reduce((aggr, empl) => {
-    let dashes = new Array(
-      findManagementChainForEmployee(empl, emplTree).length
-    )
-      .fill("-")
-      .join("");
-    aggr += `${dashes}${empl.name}`;
-    if (!empl.reports) {
-      return "";
-    } else {
-      displayManagementTree(empl.reports[0]);
+function displayManagementTree(emplTree) {
+  let treeDisplay = "";
+  treeDisplay += `${emplTree.name}`;
+  if (emplTree.reports.length > 0) {
+    for (const empl of emplTree.reports) {
+      let descendentsDisplay = displayManagementTree(empl);
+      treeDisplay = treeDisplay + "\n" + "-" + descendentsDisplay;
     }
-  }, "");
-};
+  }
+  console.log(treeDisplay);
+  return treeDisplay;
+}
 
 /* TESTS */
 
